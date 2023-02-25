@@ -1,5 +1,5 @@
-import React from 'react';
-import './shopping-cart-table.css';
+import React from "react";
+import "./ShoppingCartTable.css";
 
 const ShoppingCartTable = () => {
   return (
@@ -37,9 +37,7 @@ const ShoppingCartTable = () => {
         </tbody>
       </table>
 
-      <div className="total">
-        Total: $201
-      </div>
+      <div className="total">Total: $201</div>
     </div>
   );
 };

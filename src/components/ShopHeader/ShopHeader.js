@@ -1,6 +1,6 @@
-import React from 'react';
-import './shop-header.css';
-import { Link } from 'react-router-dom';
+import React from "react";
+import "./ShopHeader.css";
+import { Link } from "react-router-dom";
 
 const ShopHeader = ({ numItems, total }) => {
   return (

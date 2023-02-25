@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import BookListItem from "../BookListItem/BookListItem";
-// import { connect } from "react-redux";
+import { connect } from "react-redux";
 
-// import { withBookstoreService } from "../hoc";
-// import { booksLoaded, booksRequested, booksError } from "../../actions";
-// import { compose } from "../../utils";
+import WithBookstoreService from "../hoc/WithBookstoreService";
+import {
+  booksLoaded,
+  // booksRequested,
+  // booksError,
+} from "../../actions/bookStoreActions";
+import compose from "../../utils/compose";
 
 // import Spinner from "../spinner";
 // import ErrorIndicator from "../error-indicator";
@@ -12,18 +16,18 @@ import BookListItem from "../BookListItem/BookListItem";
 import "./BookList.css";
 
 class BookList extends Component {
-  // componentDidMount() {
-  //   const {
-  //     bookstoreService,
-  //     booksLoaded,
-  //     booksRequested,
-  //     booksError } = this.props;
+  componentDidMount() {
+    const {
+      bookStoreService,
+      booksLoaded,
+      //     booksRequested,
+      //     booksError
+    } = this.props;
 
-  //   booksRequested();
-  //   bookstoreService.getBooks()
-  //     .then((data) => booksLoaded(data))
-  //     .catch((err) => booksError(err));
-  // }
+    //   booksRequested();
+    bookStoreService.getBooks().then((data) => booksLoaded(data));
+    //     .catch((err) => booksError(err));
+  }
 
   render() {
     // const { books, loading, error } = this.props;
@@ -54,15 +58,17 @@ class BookList extends Component {
 // const mapStateToProps = ({ books, loading, error }) => {
 //   return { books, loading, error };
 // };
+const mapStateToProps = ({ books }) => {
+  return { books };
+};
 
-// const mapDispatchToProps = {
-//   booksLoaded,
-//   booksRequested,
-//   booksError
-// };
+const mapDispatchToProps = {
+  booksLoaded,
+  //   booksRequested,
+  //   booksError
+};
 
-// export default compose(
-//   withBookstoreService(),
-//   connect(mapStateToProps, mapDispatchToProps)
-// )(BookList);
-export default BookList;
+export default compose(
+  WithBookstoreService(),
+  connect(mapStateToProps, mapDispatchToProps)
+)(BookList);
