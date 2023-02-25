@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react';
-import './book-list-item.css';
+// import React, { Fragment } from "react";
+import "./BookListItem.css";
 
 const BookListItem = ({ book }) => {
   const { title, author } = book;
   return (
-    <Fragment>
-      <span>{title}</span>
+    <>
+      <span>{title} _ </span>
       <span>{author}</span>
-    </Fragment>
+    </>
   );
 };
 

@@ -1,5 +1,8 @@
-export default class BookstoreService {
-  data = [
+import React from "react";
+import BookList from "../../components/BookList/BookList";
+
+const HomePage = () => {
+  const data = [
     {
       id: 1,
       title: "Production-Ready Microservices",
@@ -17,12 +20,7 @@ export default class BookstoreService {
         "https://images-na.ssl-images-amazon.com/images/I/414CRjLjwgL._SX403_BO1,204,203,200_.jpg",
     },
   ];
+  return <BookList books={data} />;
+};
 
-  getBooks() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(this.data);
-      }, 700);
-    });
-  }
-}
+export default HomePage;
