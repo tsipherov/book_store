@@ -1,45 +1,44 @@
 import React, { Component } from "react";
-import BookListItem from "../BookListItem/BookListItem";
 import { connect } from "react-redux";
 
+import compose from "../../utils/compose";
 import WithBookstoreService from "../hoc/WithBookstoreService";
 import {
   booksLoaded,
-  // booksRequested,
-  // booksError,
+  booksRequested,
+  booksError,
 } from "../../actions/bookStoreActions";
-import compose from "../../utils/compose";
 
-// import Spinner from "../spinner";
-// import ErrorIndicator from "../error-indicator";
+import BookListItem from "../BookListItem/BookListItem";
+import Spinner from "../Spinner/Spinner";
+import ErrorIndicator from "../ErrorIndicator/ErrorIndicator";
 
 import "./BookList.css";
 
 class BookList extends Component {
   componentDidMount() {
-    const {
-      bookStoreService,
-      booksLoaded,
-      //     booksRequested,
-      //     booksError
-    } = this.props;
+    const { bookStoreService, booksLoaded, booksRequested, booksError } =
+      this.props;
 
-    //   booksRequested();
-    bookStoreService.getBooks().then((data) => booksLoaded(data));
-    //     .catch((err) => booksError(err));
+    booksRequested();
+    bookStoreService
+      .getBooks()
+      .then((data) => booksLoaded(data))
+      .catch((err) => booksError(err));
   }
 
   render() {
-    // const { books, loading, error } = this.props;
-    const { books } = this.props;
+    const { books, isLoading, error } = this.props;
 
-    // if (loading) {
-    //   return <Spinner />;
-    // }
+    console.log("error >>> ", error);
 
-    // if (error) {
-    //   return <ErrorIndicator />;
-    // }
+    if (isLoading) {
+      return <Spinner />;
+    }
+
+    if (error) {
+      return <ErrorIndicator />;
+    }
 
     return (
       <ul className="book-list">
@@ -55,17 +54,14 @@ class BookList extends Component {
   }
 }
 
-// const mapStateToProps = ({ books, loading, error }) => {
-//   return { books, loading, error };
-// };
-const mapStateToProps = ({ books }) => {
-  return { books };
+const mapStateToProps = ({ books, isLoading, error }) => {
+  return { books, isLoading, error };
 };
 
 const mapDispatchToProps = {
   booksLoaded,
-  //   booksRequested,
-  //   booksError
+  booksRequested,
+  booksError,
 };
 
 export default compose(
