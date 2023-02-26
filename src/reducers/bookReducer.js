@@ -7,7 +7,21 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  console.log("action.type >>> ", action.type);
+  const changeCart = (newBook, isIncrement) => {
+    const { id, title, count = 1, price: total } = newBook;
+    const findBook = state.cartItems.find((book) => book.id === id);
+    if (findBook) {
+      return state.cartItems.map((book) => {
+        if (book.id === id) {
+          book.count = isIncrement ? book.count + 1 : book.count - 1;
+          book.total = total * book.count;
+        }
+        return book;
+      });
+    }
+    return [...state.cartItems, { id, title, count, total }];
+  };
+
   switch (action.type) {
     case "FETCH_BOOKS_SUCCESS":
       return {
@@ -34,19 +48,20 @@ const reducer = (state = initialState, action) => {
       };
 
     case "BOOK_ADDED_TO_CART":
-      const bookId = action.payload;
-      const newBook = state.books.find((book) => book.id === bookId);
+      let bookId = action.payload;
+      let newBook = state.books.find((book) => book.id === bookId);
+
       return {
         ...state,
-        cartItems: [
-          ...state.cartItems,
-          {
-            id: bookId,
-            title: newBook.title,
-            count: 1,
-            total: newBook.price,
-          },
-        ],
+        cartItems: [...changeCart(newBook, true)],
+      };
+    case "BOOK_REMOVE_FROM_CART":
+      let removeBookId = action.payload;
+      let removeBook = state.books.find((book) => book.id === removeBookId);
+
+      return {
+        ...state,
+        cartItems: [...changeCart(removeBook, false)],
       };
 
     default:
