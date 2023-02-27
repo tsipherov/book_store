@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   bookAddedToCart,
+  bookDecreaseInCart,
   bookRemoveFromCart,
 } from "../../actions/bookStoreActions";
 // import compose from "../../utils/compose";
@@ -10,7 +11,7 @@ import "./ShoppingCartTable.css";
 
 const ShoppingCartTable = ({
   items,
-  total,
+  orderTotal,
   onIncrease,
   onDecrease,
   onDelete,
@@ -63,7 +64,7 @@ const ShoppingCartTable = ({
         <tbody>{items.map(renderRow)}</tbody>
       </table>
 
-      <div className="total">Total: ${total}</div>
+      {items.length ? <div className="total">Total: ${orderTotal}</div> : null}
     </div>
   );
 };
@@ -71,21 +72,31 @@ const ShoppingCartTable = ({
 const mapStateToProps = ({ cartItems, orderTotal }) => {
   return {
     items: cartItems,
-    total: orderTotal,
+    orderTotal,
   };
 };
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onDelete: () => {
-      console.log("onDElete");
-    },
-    onIncrease: (id) => {
-      dispatch(bookAddedToCart(id));
-    },
-    onDecrease: (id) => {
-      dispatch(bookRemoveFromCart(id));
-    },
-  };
+
+// первый способ передачи обработчиков
+const mapDispatchToProps = {
+  onDelete: bookRemoveFromCart,
+  onIncrease: bookAddedToCart,
+  onDecrease: bookDecreaseInCart,
 };
+
+// Второй способ передачи обработчиков
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onDelete: (id) => {
+//       dispatch(bookRemoveFromCart(id));
+//     },
+//     onIncrease: (id) => {
+//       dispatch(bookAddedToCart(id));
+//     },
+//     onDecrease: (id) => {
+//       dispatch(bookDecreaseInCart(id));
+//     },
+//   };
+// };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingCartTable);

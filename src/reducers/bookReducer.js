@@ -3,16 +3,21 @@ const initialState = {
   isLoading: true,
   error: null,
   cartItems: [],
-  orderTotal: 220,
+  orderTotal: 0,
 };
 
 const reducer = (state = initialState, action) => {
-  const changeCart = (newBook, isIncrement) => {
+  const getTotal = (cartItems) => {
+    return cartItems.reduce((sum, product) => sum + product.total, 0);
+  };
+
+  const changeCart = (bookId, isIncrement) => {
+    const newBook = state.books.find((book) => book.id === bookId);
     const { id, title, count = 1, price: total } = newBook;
-    const findBook = state.cartItems.find((book) => book.id === id);
-    if (findBook) {
+    const bookInCart = state.cartItems.find((book) => book.id === id);
+    if (bookInCart) {
       return state.cartItems.map((book) => {
-        if (book.id === id) {
+        if (book.id === bookId) {
           book.count = isIncrement ? book.count + 1 : book.count - 1;
           book.total = total * book.count;
         }
@@ -47,22 +52,40 @@ const reducer = (state = initialState, action) => {
         error: null,
       };
 
-    case "BOOK_ADDED_TO_CART":
-      let bookId = action.payload;
-      let newBook = state.books.find((book) => book.id === bookId);
+    case "BOOK_ADDED_TO_CART": {
+      const bookId = action.payload;
+      const newCart = changeCart(bookId, true);
 
       return {
         ...state,
-        cartItems: [...changeCart(newBook, true)],
+        cartItems: newCart,
+        orderTotal: getTotal(newCart),
       };
-    case "BOOK_REMOVE_FROM_CART":
-      let removeBookId = action.payload;
-      let removeBook = state.books.find((book) => book.id === removeBookId);
+    }
+    case "BOOK_DECREASE_IN_CART": {
+      const bookId = action.payload;
+      const filteringCart = changeCart(bookId, false).filter(
+        (book) => book.count > 0
+      );
 
       return {
         ...state,
-        cartItems: [...changeCart(removeBook, false)],
+        cartItems: filteringCart,
+        orderTotal: getTotal(filteringCart),
       };
+    }
+    case "BOOK_REMOVE_FROM_CART": {
+      const bookId = action.payload;
+      const filteringCart = state.cartItems.filter(
+        (book) => book.id !== bookId
+      );
+
+      return {
+        ...state,
+        cartItems: filteringCart,
+        orderTotal: getTotal(filteringCart),
+      };
+    }
 
     default:
       return state;

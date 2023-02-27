@@ -32,6 +32,14 @@ export const bookAddedToCart = (bookId) => {
     payload: bookId,
   };
 };
+
+export const bookDecreaseInCart = (bookId) => {
+  return {
+    type: "BOOK_DECREASE_IN_CART",
+    payload: bookId,
+  };
+};
+
 export const bookRemoveFromCart = (bookId) => {
   return {
     type: "BOOK_REMOVE_FROM_CART",
